@@ -1,8 +1,13 @@
 import sqlite3
+import hashlib
+
+DB_NAME = "DeepfakeGame.db"
+def get_connection():
+    return sqlite3.connect(DB_NAME)
 
 
 def init_db():
-    conn = sqlite3.connect('DeepfakeGame.db')
+    conn = get_connection()
     cursor = conn.cursor()
 
     # create Users table
@@ -48,39 +53,45 @@ def init_db():
     ''')
 
     conn.commit()
-    return conn
+    conn.close()
+
+def hash_password(password: str) -> str:
+    return hashlib.sha256(password.encode()).hexdigest()
 
     # add user to database
-
-
 def add_user(username, password):
     # add user to database, return userID
-    conn = sqlite3.connect('DeepfakeGame.db')
+    conn = get_connection()
     cursor = conn.cursor()
 
     # see if user already exists in db
     cursor.execute('''SELECT 1 FROM Users WHERE Username=?''', (username,))
     if cursor.fetchone() is not None:
         return -1
+    hashed_pw = hash_password(password)
 
     cursor.execute('''
     INSERT INTO Users (Username, Password)
     VALUES (?, ?)
-    ''', (username, password))
+    ''', (username, hashed_pw))
     conn.commit()
-    return cursor.lastrowid
+    user_id = cursor.lastrowid
+    conn.close()
+    return user_id
 
 
-def authenticate_user(username, password):
+def authenticate_user(username: str, password: str):
     # authenticate a user and return UserID
-    conn = sqlite3.connect('DeepfakeGame.db')
+    conn = get_connection()
     cursor = conn.cursor()
+    hashed_pw = hash_password(password)
     cursor.execute('''
     SELECT UserID 
     FROM Users 
     WHERE Username = ? AND Password = ?
-    ''', (username, password))
+    ''', (username, hashed_pw))
     result = cursor.fetchone()
+    conn.close()
     return result[0] if result else None
 
 
