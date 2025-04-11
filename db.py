@@ -2,6 +2,7 @@ import sqlite3
 import hashlib
 
 DB_NAME = "DeepfakeGame.db"
+
 def get_connection():
     return sqlite3.connect(DB_NAME)
 
@@ -58,8 +59,9 @@ def init_db():
 def hash_password(password: str) -> str:
     return hashlib.sha256(password.encode()).hexdigest()
 
+
     # add user to database
-def add_user(username, password):
+def add_user(username: str, password: str):
     # add user to database, return userID
     conn = get_connection()
     cursor = conn.cursor()
@@ -99,7 +101,7 @@ def add_question(question_type, question_string):
     # add a question to the database
     # type is either 'text', 'image', or 'video'
 
-    conn = sqlite3.connect('DeepfakeGame.db')
+    conn = get_connection()
     cursor = conn.cursor()
     cursor.execute('''
     INSERT INTO Questions (QuestionType, QuestionString)
@@ -114,7 +116,7 @@ def add_answer(question_id, correct, answer_string, feedback):
     # answer_string: either text answer or path to media
     # feedback: Explanation why answer is correct/incorrect or why media is deepfake or not
 
-    conn = sqlite3.connect('DeepfakeGame.db')
+    conn = get_connection()
     cursor = conn.cursor()
     cursor.execute('''
     INSERT INTO Answers (QuestionID, Correct, AnswerString, Feedback)
@@ -125,7 +127,7 @@ def add_answer(question_id, correct, answer_string, feedback):
 
 
 def update_leaderboard(user_id, score):
-    conn = sqlite3.connect('DeepfakeGame.db')
+    conn = get_connection()
     cursor = conn.cursor()
     cursor.execute('''
     INSERT INTO Leaderboard (UserID, Score)
@@ -148,7 +150,7 @@ def update_leaderboard(user_id, score):
 
 def get_user_highscore(user_id):
     # get user's high score
-    conn = sqlite3.connect('DeepfakeGame.db')
+    conn = get_connection()
     cursor = conn.cursor()
     cursor.execute('SELECT HighScore FROM Users WHERE UserID = ?', (user_id,))
     return cursor.fetchone()[0]
@@ -156,7 +158,7 @@ def get_user_highscore(user_id):
 
 def get_question_with_answers(question_id):
     # get a question and return and its answers
-    conn = sqlite3.connect('DeepfakeGame.db')
+    conn = get_connection()
     cursor = conn.cursor()
     cursor.execute('''
     SELECT 
@@ -174,7 +176,7 @@ def get_question_with_answers(question_id):
 
 def get_media_question_count():
     # get count of image and video questions
-    conn = sqlite3.connect('DeepfakeGame.db')
+    conn = get_connection()
     cursor = conn.cursor()
     cursor.execute('''
     SELECT QuestionType, COUNT(*) 
@@ -187,7 +189,7 @@ def get_media_question_count():
 
 def get_questions_by_type(question_type):
     # get all questions of a specific type
-    conn = sqlite3.connect('DeepfakeGame.db')
+    conn = get_connection()
     cursor = conn.cursor()
     cursor.execute('''
     SELECT QuestionID, QuestionString
@@ -198,7 +200,7 @@ def get_questions_by_type(question_type):
 
 
 def get_leaderboard(limit=10):
-    conn = sqlite3.connect('DeepfakeGame.db')
+    conn = get_connection()
     cursor = conn.cursor()
     cursor.execute('''
     SELECT u.Username, l.Score, l.ScoreDate
@@ -236,4 +238,3 @@ def examples():
 #@app.route('/api/question/<int:question_id>', methods=['GET'])
 #def api_get_question(question_id):
    # return jsonify(get_question_with_answers(question_id)), 200  return jsonified list of answers
-
