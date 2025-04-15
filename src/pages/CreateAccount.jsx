@@ -14,7 +14,7 @@ export function CreateAccount() {
 
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { signIn } = useAuth(); // 👈 bring in global auth
+  const { signIn } = useAuth(); // bring in global auth
 
   const handleChange = (e) => {
     setForm({
