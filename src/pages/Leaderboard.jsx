@@ -1,29 +1,29 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import { Link } from 'react-router-dom'
-import {useAuth } from "../context/AuthContext";
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from "../context/AuthContext";
+import { getLeaderboard } from "../api";
 
-const { user, signOut } = useAuth();
-console.log("Logged in as:", user?.username);
 
-{/* This page establishes the leaderboard.  */}
+// This page establishes the leaderboard.  
 
 export function Leaderboard() {
-  {/* Variables */}
-  const [leaders, setLeaders] = useState([])
+  const [leaders, setLeaders] = useState([]);
+  const { user, signOut } = useAuth();
+  console.log("Logged in as:", user?.username);
 
-  {/* Communicate with backend to find top players */}
+  // Communicate with backend to find top players 
   useEffect(() => {
     const fetchLeaders = async () => {
       try {
-        const res = await axios.get('http://localhost:8000/leaderboard')
-        setLeaders(res.data)
+        const res = await getLeaderboard();
+        setLeaders(res)
       } catch (err) {
         console.error('Failed to fetch leaderboard:', err)
       }
-    }
-    fetchLeaders()
-  }, [])
+    };
+    fetchLeaders();
+  }, []);
+
 
   return (
     <div className="min-h-screen bg-slate-900 text-white p-8 flex flex-col items-center"> {/* Page contianer */}
@@ -48,7 +48,7 @@ export function Leaderboard() {
               {leaders.map((user, idx) => (
                 <tr key={idx} className="border-b border-slate-700">
                   <td className="py-2">{user.username}</td>
-                  <td className="py-2 text-right">{user.high_score}</td>
+                  <td className="py-2 text-right">{user.score}</td>
                 </tr>
               ))}
             </tbody>
@@ -59,3 +59,4 @@ export function Leaderboard() {
   )
 }
 
+export default Leaderboard;
