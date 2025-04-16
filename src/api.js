@@ -20,8 +20,14 @@ export async function loginUser(username, password) {
   return await res.json();
 }
 
-// Get question with answers
+// Get specific question by ID 
 export async function getQuestion(questionId) {
   const res = await fetch(`${API_BASE_URL}/game/${questionId}`);
+  return await res.json();
+}
+
+// Get a random question
+export async function getRandomQuestion() {
+  const res = await fetch(`${API_BASE_URL}/game/random`);
   return await res.json();
 }
