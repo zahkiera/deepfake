@@ -3,13 +3,19 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
+{/* This page handles user sign in and designs a standard sign in page. */}
+{/* Communicates with the db to verify user credentials */}
+
 export function SignIn() {
+
+  {/* Define variables from imported components */}
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { signIn } = useAuth();
   const navigate = useNavigate();
   const [error, setError] = useState("");
 
+  {/* Function to handle sign in. Communicate with backend to verify credentials. Once verified, navigate to home page */}
   const handleSignIn = async (e) => {
     e.preventDefault();
     setError("");
@@ -21,19 +27,21 @@ export function SignIn() {
       });
 
       // Get user data from response and update global auth
-      const userData = response.data; // adjust if response is { user: {...} }
-      signIn(userData); // this updates global state
+      const userData = response.data;
+      signIn(userData); // update global state
 
       navigate("/home"); 
     } catch (err) {
       console.error(err);
-      setError("Invalid login credentials");
+      setError("Invalid login credentials"); {/* Catch error */}
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white px-4 font-mono">
-      {/* Fixed bottom nav */}
+    
+    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white px-4 font-mono"> {/* Page container. Define bckgrnd, text, and font */}
+      
+      {/* Home button at bottom that navigates to landing page */}
       <div className="fixed bottom-0 w-full bg-slate-900 text-white p-2 flex justify-center z-50">
         <button onClick={() => navigate("/")} title="Home" className="p-2 semi-rounded-full bg-slate-900 hover:bg-slate-700">
           <span className="material-icons">home</span>
@@ -45,7 +53,7 @@ export function SignIn() {
         Detect the Deepfake
       </Link>
 
-      {/* Sign-in form */}
+      {/* Sign in form */}
       <div className="bg-slate-800 p-6 rounded-lg shadow-md w-full max-w-md">
         <form onSubmit={handleSignIn} className="bg-slate-800 p-8 rounded space-y-4">
           <h2 className="text-xl text-center">Welcome Back</h2>

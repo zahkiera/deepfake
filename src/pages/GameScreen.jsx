@@ -13,7 +13,11 @@ const dummyData = [
   },
 ]
 
+{/* This page is the game container. It displays 4 images or videos which the user may choose from.  */}
+{/* Runner component is available on this page */}
+
 export function GameScreen() {
+  {/* Variables */}
   const navigate = useNavigate()
   const [questionIndex, setQuestionIndex] = useState(0)
   const [score, setScore] = useState(0)
@@ -29,6 +33,7 @@ export function GameScreen() {
     if (correct) setCorrectId(correct.id)
   }, [currentQuestion])
 
+  {/* Function to handle user answer selection */}
   const handleAnswer = (image) => {
     if (isAnswered) return
 
@@ -42,6 +47,7 @@ export function GameScreen() {
     setIsAnswered(true)
   }
 
+  {/* Function to go to the next question */}
   const handleNext = () => {
     setSelected(null)
     setShowFeedback(false)
@@ -50,17 +56,18 @@ export function GameScreen() {
     if (questionIndex < dummyData.length - 1) {
       setQuestionIndex((prev) => prev + 1)
     } else {
-      navigate('/fin', { state: { score } })
+      navigate('/fin', { state: { score } }) // navigate and pass final score to game finish page
     }
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center gap-8 p-4">
+    <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center gap-8 p-4"> {/* Page container */}
       <h1 className="text-2xl font-mono">Choose the Deepfake</h1>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4"> {/* Images displayed in a grid */}
         {currentQuestion.images.map((img) => {
           let borderColor = 'border-transparent'
-
+          
+          {/* Handle correct/incorrect img border coloring*/}
           if (isAnswered) {
             if (img.id === correctId) {
               borderColor = 'border-green-500'
@@ -73,7 +80,7 @@ export function GameScreen() {
             <button
               key={img.id}
               onClick={() => handleAnswer(img)}
-              disabled={isAnswered}
+              disabled={isAnswered} // disable so user can't click again
               className={`border-4 rounded-lg overflow-hidden ${borderColor}`}
             >
               <img
@@ -88,6 +95,7 @@ export function GameScreen() {
 
       {showFeedback && (
         <div className="flex flex-col items-center">
+          {/* Pop up text that displays feedback */}
           {selected === correctId ? (
             <p className="text-green-400 text-center font-mono">
               Correct! +10 points
@@ -98,6 +106,7 @@ export function GameScreen() {
             </p>
           )}
 
+          {/* Continue button */}
           <button
             onClick={handleNext}
             className="mt-4 px-4 py-2 bg-blue-600 rounded hover:bg-blue-500 font-mono"
