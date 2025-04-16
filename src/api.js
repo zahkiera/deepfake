@@ -40,3 +40,8 @@ export async function submitAnswer(data){
   });
   return await res.json();
 }
+
+export async function getLeaderboard(limit = 10) {
+  const res = await fetch(`http://127.0.0.1:8000/api/leaderboard?limit=${limit}`);
+  return await res.json();
+}
