@@ -1,7 +1,8 @@
 from fastapi import APIRouter
+from db import get_leaderboard
 
 router = APIRouter()
 
-@router.get("/test")
-def test_leaderboard_route():
-    return {"message": "Leaderboard routes are working!"}
+@router.get("/")
+def leaderboard(limit: int = 10):
+    return get_leaderboard(limit)
