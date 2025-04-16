@@ -82,7 +82,7 @@ export function CreateAccount() {
               type="text"
               id="firstName"
               name="firstName"
-              className="w-full px-3 py-2 rounded bg-slate-700 text-white"
+              className="w-full px-3 py-2 rounded bg-white text-black"
               value={form.firstName}
               onChange={handleChange}
               required
@@ -95,7 +95,7 @@ export function CreateAccount() {
               type="text"
               id="lastName"
               name="lastName"
-              className="w-full px-3 py-2 rounded bg-slate-700 text-white"
+              className="w-full px-3 py-2 rounded bg-white text-black"
               value={form.lastName}
               onChange={handleChange}
               required
@@ -108,7 +108,7 @@ export function CreateAccount() {
               type="email"
               id="email"
               name="email"
-              className="w-full px-3 py-2 rounded bg-slate-700 text-white"
+              className="w-full px-3 py-2 rounded bg-white text-black"
               value={form.email}
               onChange={handleChange}
               required
@@ -121,7 +121,7 @@ export function CreateAccount() {
               type="text"
               id="username"
               name="username"
-              className="w-full px-3 py-2 rounded bg-slate-700 text-white"
+              className="w-full px-3 py-2 rounded bg-white text-black"
               value={form.username}
               onChange={handleChange}
               required
@@ -134,7 +134,7 @@ export function CreateAccount() {
               type="password"
               id="password"
               name="password"
-              className="w-full px-3 py-2 rounded bg-slate-700 text-white"
+              className="w-full px-3 py-2 rounded bg-white text-black"
               value={form.password}
               onChange={handleChange}
               required
