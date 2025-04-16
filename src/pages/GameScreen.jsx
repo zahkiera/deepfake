@@ -1,21 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth} from "../context/AuthContext;
-
-const { user, signOut } = useAuth();
-console.log("Logged in as:", user?.username);
-
-const dummyData = [
-  {
-    id: 1,
-    images: [
-      { id: 'a', url: '/images/img1.jpg', isDeepfake: false },
-      { id: 'b', url: '/images/img2.jpg', isDeepfake: true }, // correct answer
-      { id: 'c', url: '/images/img3.jpg', isDeepfake: false },
-      { id: 'd', url: '/images/img4.jpg', isDeepfake: false },
-    ],
-  },
-]
+import { useAuth } from "../context/AuthContext";
+import { getRandomQuestion } from "../api";
 
 {/* This page is the game container. It displays 4 images or videos which the user may choose from.  */}
 {/* Runner component is available on this page */}
@@ -23,19 +9,45 @@ const dummyData = [
 export function GameScreen() {
   {/* Variables */}
   const navigate = useNavigate()
-  const [questionIndex, setQuestionIndex] = useState(0)
   const [score, setScore] = useState(0)
   const [selected, setSelected] = useState(null)
   const [showFeedback, setShowFeedback] = useState(false)
   const [isAnswered, setIsAnswered] = useState(false)
   const [correctId, setCorrectId] = useState(null)
+  const [question, setQuestion] = useState(null);
+  const { user, signOut } = useAuth();
+  console.log("Logged in as:", user?.username);
 
-  const currentQuestion = dummyData[questionIndex]
+  if (!question) return <p className="text-white">Loading question...</p>;
+  useEffect(() => {
+    const fetchQuestion = async () => {
+      const result = await getRandomQuestion();
+      if (result && !result.error){
+        // transform backend image paths to match my folder
+        const images = result.answers.map((a, index) => ({
+          id: a.id,
+          url: a.text,  // insert correct image path
+          isDeepfake: false, 
+      }));
+
+      const correctIndex = Math.floor(Math.random() * images.length);
+      images[correctIndex].isDeepfake = true; 
+      setQuestion({
+        question_id: result.question_id,
+        question_text: result.question_text,
+        images: images,
+      });
+    }
+  };
+    fetchQuestion();
+  }, []);
 
   useEffect(() => {
-    const correct = currentQuestion.images.find((img) => img.isDeepfake)
-    if (correct) setCorrectId(correct.id)
-  }, [currentQuestion])
+    if (question) {
+      const correct = question.images.find((img) => img.isDeepfake);
+      if (correct) setCorrectId(correct.id);
+     }
+  }, [question]);
 
   {/* Function to handle user answer selection */}
   const handleAnswer = (image) => {
@@ -53,22 +65,18 @@ export function GameScreen() {
 
   {/* Function to go to the next question */}
   const handleNext = () => {
-    setSelected(null)
-    setShowFeedback(false)
-    setIsAnswered(false)
-
-    if (questionIndex < dummyData.length - 1) {
-      setQuestionIndex((prev) => prev + 1)
-    } else {
-      navigate('/fin', { state: { score } }) // navigate and pass final score to game finish page
-    }
-  }
+    setSelected(null);
+    setShowFeedback(false);
+    setIsAnswered(false);
+    setCorrectId(null);
+    setQuestion(null); // Triggers fetch of next question
+  };
 
   return (
     <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center gap-8 p-4"> {/* Page container */}
       <h1 className="text-2xl font-mono">Choose the Deepfake</h1>
       <div className="grid grid-cols-2 gap-4"> {/* Images displayed in a grid */}
-        {currentQuestion.images.map((img) => {
+        {question.images.map((img) => {
           let borderColor = 'border-transparent'
           
           {/* Handle correct/incorrect img border coloring*/}
