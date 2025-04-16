@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from routes import leaderboard
 from fastapi.middleware.cors import CORSMiddleware
 
 # Import route files once created
