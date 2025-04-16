@@ -215,10 +215,12 @@ def get_leaderboard(limit=10):
     SELECT u.Username, l.Score, l.ScoreDate
     FROM Leaderboard l
     JOIN Users u ON l.UserID = u.UserID
-    ORDER BY l.Score DESC
+    ORDER BY l.Score DESC, 1.ScoreDate ASC
     LIMIT ?
     ''', (limit,))
-    return cursor.fetchall()
+    result = cursor.fetchall()
+    conn.close()
+    return [{"username": row[0], "score": row[1], "date": row[2]} for row in result]
 
 
 def examples():
