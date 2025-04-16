@@ -1,7 +1,26 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
+from pydantic import BaseModel
 from db import get_connection
+from db import update_leaderboard
 
 router = APIRouter()
+
+class SubmitRequest(BaseModel):
+    user_id: int
+    question_id: int
+    selected_id: int
+    correct_id: int
+    score_earned: int
+
+@router.post("/submit")
+def submit_answer(data: SubmitRequest):
+    #update leaderboard with score if user is not guest
+    if data.user_id != -1:
+        update_leaderboard(data.user_id, data.score_earned)
+    return {
+        "message": "Answer submitted.",
+        "earned": data.score_earned
+    }
 
 @router.get("/random")
 def get_random_question():
