@@ -17,6 +17,9 @@ def init_db():
         UserID INTEGER PRIMARY KEY AUTOINCREMENT,
         Username TEXT UNIQUE NOT NULL,
         Password TEXT NOT NULL,
+        FirstName TEXT,
+        LastName TEXT,
+        Email TEXT,
         HighScore INTEGER DEFAULT 0
     )
     ''')
@@ -61,7 +64,7 @@ def hash_password(password: str) -> str:
 
 
     # add user to database
-def add_user(username: str, password: str):
+def add_user(username: str, password: str, first_name: str, last_name: str, email: str):
     # add user to database, return userID
     conn = get_connection()
     cursor = conn.cursor()
@@ -72,10 +75,15 @@ def add_user(username: str, password: str):
         return -1
     hashed_pw = hash_password(password)
 
+    # see if the email already exists in db
+    cursor.execute('''SELECT 1 FROM Users WHERE Email=?''', (email,))
+    if cursor.fetchone() is not None:
+        return -2 
+
     cursor.execute('''
-    INSERT INTO Users (Username, Password)
-    VALUES (?, ?)
-    ''', (username, hashed_pw))
+    INSERT INTO Users (Username, Password, FirstName, LastName, Email)
+    VALUES (?, ?, ?, ?, ?)
+    ''', (username, hashed_pw, first_name, last_name, email))
     conn.commit()
     user_id = cursor.lastrowid
     conn.close()
