@@ -8,6 +8,9 @@ router = APIRouter()
 class RegisterRequest(BaseModel):
     username: constr(min_length=3)
     password: constr(min_length=10)
+    firstName: str
+    lastName: str
+    email: str
 
 class LoginRequest(BaseModel):
     username: str
@@ -16,7 +19,13 @@ class LoginRequest(BaseModel):
 # Register Route --
 @router.post("/register")
 def register_user(req: RegisterRequest):
-    user_id = add_user(req.username, req.password)
+    user_id = add_user(
+        req.username, 
+        req.password,
+        req.firstName,
+        req.lastName,
+        req.email
+    )
     if user_id == -1:
         raise HTTPException(status_code=409, detail="Username already exists.")
     return {"user_id": user_id, "message": "User registered successfully"}
