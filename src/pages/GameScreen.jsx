@@ -4,8 +4,8 @@ import { useAuth } from "../context/AuthContext";
 import { getRandomQuestion } from "../api";
 import { submitAnswer } from "../api";
 
-{/* This page is the game container. It displays 4 images or videos which the user may choose from.  */}
-{/* Runner component is available on this page */}
+// This page is the game container. It displays 4 images or videos which the user may choose from. 
+// Runner component is available on this page 
 
 export function GameScreen() {
   // Variables 
@@ -101,6 +101,16 @@ export function GameScreen() {
   
   return (
     <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center gap-8 p-4"> {/* Page container */}
+      {user?.username ? (
+      <p className="text-sm text-slate-400 font-mono">
+        Welcome, {user.username}!
+      </p>
+    ) : (
+      <p className="text-sm text-yellow-400 font-mono">
+        Playing as guest – your scores won’t be saved.
+      </p>
+    )}
+
       <p className="text-sm text-slate-400 font-mono">
         Round {questionCount} / {maxRounds}
       </p>
