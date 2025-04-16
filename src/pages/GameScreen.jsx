@@ -8,7 +8,7 @@ import { submitAnswer } from "../api";
 {/* Runner component is available on this page */}
 
 export function GameScreen() {
-  {/* Variables */}
+  // Variables 
   const navigate = useNavigate()
   const [score, setScore] = useState(0)
   const [selected, setSelected] = useState(null)
@@ -17,6 +17,8 @@ export function GameScreen() {
   const [correctId, setCorrectId] = useState(null)
   const [question, setQuestion] = useState(null);
   const { user, signOut } = useAuth();
+  const maxRounds = 5;
+  const [questionCount, setQuestionCount] = useState(1);
   console.log("Logged in as:", user?.username);
 
   useEffect(() => {
@@ -81,7 +83,16 @@ export function GameScreen() {
     setShowFeedback(false);
     setIsAnswered(false);
     setCorrectId(null);
-    setQuestion(null); // Triggers fetch of next question
+
+    setQuestionCount((prev) => {
+      const newCount = prev + 1;
+      if(newCount > maxRounds) {
+        navigate("/fin", { state: { score } });
+      } else{
+        setQuestion(null); // Triggers fetching next question
+      }
+      return newCount;
+    });
   };
   
   if (!question) { 
@@ -90,6 +101,9 @@ export function GameScreen() {
   
   return (
     <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center gap-8 p-4"> {/* Page container */}
+      <p className="text-sm text-slate-400 font-mono">
+        Round {questionCount} / {maxRounds}
+      </p>
       <h1 className="text-2xl font-mono">Choose the Deepfake</h1>
       <div className="grid grid-cols-2 gap-4"> {/* Images displayed in a grid */}
         {question.images.map((img) => {
