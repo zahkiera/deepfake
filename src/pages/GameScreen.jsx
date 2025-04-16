@@ -18,7 +18,6 @@ export function GameScreen() {
   const { user, signOut } = useAuth();
   console.log("Logged in as:", user?.username);
 
-  if (!question) return <p className="text-white">Loading question...</p>;
   useEffect(() => {
     const fetchQuestion = async () => {
       const result = await getRandomQuestion();
@@ -71,14 +70,20 @@ export function GameScreen() {
     setCorrectId(null);
     setQuestion(null); // Triggers fetch of next question
   };
-
+  
+  if (!question) { 
+    return <p className="text-white">Loading question...</p>;
+  }
+  
   return (
     <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center gap-8 p-4"> {/* Page container */}
       <h1 className="text-2xl font-mono">Choose the Deepfake</h1>
       <div className="grid grid-cols-2 gap-4"> {/* Images displayed in a grid */}
         {question.images.map((img) => {
           let borderColor = 'border-transparent'
-          
+      
+     
+      
           {/* Handle correct/incorrect img border coloring*/}
           if (isAnswered) {
             if (img.id === correctId) {
