@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from "../context/AuthContext";
 import { getRandomQuestion } from "../api";
+import { submitAnswer } from "../api";
 
 {/* This page is the game container. It displays 4 images or videos which the user may choose from.  */}
 {/* Runner component is available on this page */}
@@ -49,18 +50,30 @@ export function GameScreen() {
   }, [question]);
 
   {/* Function to handle user answer selection */}
-  const handleAnswer = (image) => {
-    if (isAnswered) return
+  const handleAnswer = async (image) => {
+    if (isAnswered) return;
 
-    setSelected(image.id)
-    setShowFeedback(true)
+    setSelected(image.id);
+    setShowFeedback(true);
+
+    let earned = 0;
 
     if (image.isDeepfake) {
-      setScore((prev) => prev + 10)
+      earned = 10;
+      setScore((prev) => prev + earned);
     }
 
-    setIsAnswered(true)
-  }
+    setIsAnswered(true);
+
+    // Submit to backend
+    await submitAnswer({
+      user_id: user?.user_id || -1,  //handle guest
+      question_id: question.question_id,
+      selected_id: image.id,
+      correct_id: correctId,
+      score_earned: earned,
+    });
+  };
 
   {/* Function to go to the next question */}
   const handleNext = () => {
