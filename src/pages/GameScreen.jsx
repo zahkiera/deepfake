@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth} from "../context/AuthContext;
+
+const { user, signOut } = useAuth();
+console.log("Logged in as:", user?.username);
 
 const dummyData = [
   {
