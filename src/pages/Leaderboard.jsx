@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import {useAuth } from "../context/AuthContext";
+
+const { user, signOut } = useAuth();
+console.log("Logged in as:", user?.username);
 
 {/* This page establishes the leaderboard.  */}
 
