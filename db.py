@@ -153,6 +153,7 @@ def update_leaderboard(user_id, score):
     ''', (score, score, user_id))
 
     conn.commit()
+    conn.close()
     return cursor.lastrowid
 
 
