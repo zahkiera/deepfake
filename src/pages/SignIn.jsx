@@ -1,19 +1,25 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
+import {useNavigate, Link, useLocation} from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import {loginUser, registerUser} from "../api.js";
+import signIn from "../SignIn.jsx";
 
 {/* This page handles user sign in and designs a standard sign in page. */}
 {/* Communicates with the db to verify user credentials */}
 
 export function SignIn() {
+const l = useLocation();
+const un = l.state?.un || "";
+const pw = l.state?.pw || "";
 
   {/* Define variables from imported components */}
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { signIn } = useAuth();
+  const [username, setUsername] = useState(un);
+  const [password, setPassword] = useState(pw);
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const { signIn } = useAuth();
+
 
   {/* Function to handle sign in. Communicate with backend to verify credentials. Once verified, navigate to home page */}
   const handleSignIn = async (e) => {
@@ -21,16 +27,20 @@ export function SignIn() {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:8000/signin", {
-        email,
-        password,
-      });
+       const response = await loginUser(username, password);
+      console.log(response)
+       if(response.user_id >= 0){
+         // save username
+        signIn({username: username})
+         // navigate to home
+         navigate("/home");
+       }
+       else if (response.detail === 'Invalid credentials.'){
+         setError("Invalid login credentials");
+       }
 
-      // Get user data from response and update global auth
-      const userData = response.data;
-      signIn(userData); // update global state
 
-      navigate("/home"); 
+    //  navigate("/home");
     } catch (err) {
       console.error(err);
       setError("Invalid login credentials"); {/* Catch error */}
@@ -44,7 +54,7 @@ export function SignIn() {
       {/* Home button at bottom that navigates to landing page */}
       <div className="fixed bottom-0 w-full bg-slate-900 text-white p-2 flex justify-center z-50">
         <button onClick={() => navigate("/")} title="Home" className="p-2 semi-rounded-full bg-slate-900 hover:bg-slate-700">
-          <span className="material-icons">home</span>
+          <span className="material-icons align-middle">home</span>
         </button>
       </div>
 
@@ -59,18 +69,18 @@ export function SignIn() {
           <h2 className="text-xl text-center">Welcome Back</h2>
 
           <input
-            type="email"
-            placeholder="Email"
-            className="w-full p-2 rounded text-black"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="username"
+            placeholder="Username"
+            className="w-full p-2 rounded text-white"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             required
           />
 
           <input
             type="password"
             placeholder="Password"
-            className="w-full p-2 rounded text-black"
+            className="w-full p-2 rounded text-white"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required

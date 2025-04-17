@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from "../context/AuthContext";
-import { getRandomQuestion } from "../api";
-import { submitAnswer } from "../api";
+import { getFullMediaUrl, getRandomQuestion, submitAnswer, getQuestionMedia } from "../api";
+
 
 // This page is the game container. It displays 4 images or videos which the user may choose from. 
 // Runner component is available on this page 
 
 export function GameScreen() {
-  // Variables 
   const navigate = useNavigate()
   const [score, setScore] = useState(0)
   const [selected, setSelected] = useState(null)
@@ -16,6 +15,7 @@ export function GameScreen() {
   const [isAnswered, setIsAnswered] = useState(false)
   const [correctId, setCorrectId] = useState(null)
   const [question, setQuestion] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const { user, signOut } = useAuth();
   const maxRounds = 5;
   const [questionCount, setQuestionCount] = useState(1);
@@ -23,26 +23,43 @@ export function GameScreen() {
 
   useEffect(() => {
     const fetchQuestion = async () => {
+      setIsLoading(true);
+      console.log("Fetching question...")
       const result = await getRandomQuestion();
-      if (result && !result.error){
+      console.log("Question result:", result)
+      
+      if (result!=="undefined" && !result.error){
+        const media = await getQuestionMedia(result.question_id);
+        console.log("Media response:", media)
+        
         // transform backend image paths to match my folder
-        const images = result.answers.map((a, index) => ({
-          id: a.id,
-          url: a.text,  // insert correct image path
-          isDeepfake: false, 
-      }));
+        const images = result.answers.map((a, index) => {
+          console.log("Answer data:", a);
+          const isTextQuestion = !a.text.includes('.jpg') && !a.text.includes('.png');
+          console.log("Is text question:", isTextQuestion);
+          
+          return {
+            id: a.id,
+            url: isTextQuestion ? null : getFullMediaUrl(media.media_urls[index]),
+            text: isTextQuestion ? a.text : null,
+            isDeepfake: false, 
+          }
+        });
+        
+        console.log("Final images array:", images)
 
-      const correctIndex = Math.floor(Math.random() * images.length);
-      images[correctIndex].isDeepfake = true; 
-      setQuestion({
-        question_id: result.question_id,
-        question_text: result.question_text,
-        images: images,
-      });
-    }
-  };
+        const correctIndex = Math.floor(Math.random() * images.length);
+        images[correctIndex].isDeepfake = true; 
+        setQuestion({
+          question_id: result.question_id,
+          question_text: result.question_text,
+          images: images,
+        });
+      }
+      setIsLoading(false);
+    };
     fetchQuestion();
-  }, []);
+  }, [questionCount]);
 
   useEffect(() => {
     if (question) {
@@ -83,20 +100,27 @@ export function GameScreen() {
     setShowFeedback(false);
     setIsAnswered(false);
     setCorrectId(null);
+    setIsLoading(true);
 
     setQuestionCount((prev) => {
       const newCount = prev + 1;
       if(newCount > maxRounds) {
         navigate("/fin", { state: { score } });
-      } else{
-        setQuestion(null); // Triggers fetching next question
       }
       return newCount;
     });
   };
   
-  if (!question) { 
-    return <p className="text-white">Loading question...</p>;
+  if (isLoading || !question) { 
+    return (
+      <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-white text-xl font-mono">Loading question...</p>
+          <p className="text-slate-400 text-sm">Preparing your deepfake challenge</p>
+        </div>
+      </div>
+    );
   }
   
   return (
@@ -107,41 +131,55 @@ export function GameScreen() {
       </p>
     ) : (
       <p className="text-sm text-yellow-400 font-mono">
-        Playing as guest – your scores won’t be saved.
+        Playing as guest – your scores won't be saved.
       </p>
     )}
 
       <p className="text-sm text-slate-400 font-mono">
         Round {questionCount} / {maxRounds}
       </p>
-      <h1 className="text-2xl font-mono">Choose the Deepfake</h1>
-      <div className="grid grid-cols-2 gap-4"> {/* Images displayed in a grid */}
-        {question.images.map((img) => {
+    
+      
+      {/* Question text display */}
+      <div className="text-center max-w-2xl">
+        <p className="text-2xl font-mono mb-4">{question.question_text}</p>
+      </div>
+
+      {/* Answers grid - supports both images and text */}
+      <div className="grid grid-cols-2 gap-4">
+        {question.images.map((item) => {
           let borderColor = 'border-transparent'
       
-     
-      
-          {/* Handle correct/incorrect img border coloring*/}
           if (isAnswered) {
-            if (img.id === correctId) {
+            if (item.id === correctId) {
               borderColor = 'border-green-500'
-            } else if (img.id === selected) {
+            } else if (item.id === selected) {
               borderColor = 'border-red-500'
             }
           }
 
           return (
             <button
-              key={img.id}
-              onClick={() => handleAnswer(img)}
-              disabled={isAnswered} // disable so user can't click again
-              className={`border-4 rounded-lg overflow-hidden ${borderColor}`}
+              key={item.id}
+              onClick={() => handleAnswer(item)}
+              disabled={isAnswered}
+              className={`border-4 rounded-lg overflow-hidden ${borderColor} hover:bg-slate-800 transition-colors`}
             >
-              <img
-                src={img.url}
-                alt="choice"
-                className="w-40 h-40 object-cover"
-              />
+              {item.url ? (
+                // Image answer
+                <img
+                  src={item.url}
+                  alt="choice"
+                  className="w-40 h-40 object-cover"
+                />
+              ) : (
+                // Text answer
+                <div className="p-6 min-w-[300px]">
+                  <p className="text-center break-words">
+                    {item.text}
+                  </p>
+                </div>
+              )}
             </button>
           )
         })}
@@ -149,7 +187,6 @@ export function GameScreen() {
 
       {showFeedback && (
         <div className="flex flex-col items-center">
-          {/* Pop up text that displays feedback */}
           {selected === correctId ? (
             <p className="text-green-400 text-center font-mono">
               Correct! +10 points
@@ -160,7 +197,6 @@ export function GameScreen() {
             </p>
           )}
 
-          {/* Continue button */}
           <button
             onClick={handleNext}
             className="mt-4 px-4 py-2 bg-blue-600 rounded hover:bg-blue-500 font-mono"

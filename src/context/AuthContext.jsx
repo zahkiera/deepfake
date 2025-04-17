@@ -5,7 +5,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null) // You can optionally initialize from localStorage
+  const [user, setUser] = useState("") // You can optionally initialize from localStorage
   const [loading, setLoading] = useState(true);
 
 
@@ -15,13 +15,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signOut = () => {
-    setUser(null)
+    setUser("")
     localStorage.removeItem("user");
   };
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
-    if(savedUser){
+    if(savedUser !== "undefined"){
       setUser(JSON.parse(savedUser));
     }
     setLoading(false);

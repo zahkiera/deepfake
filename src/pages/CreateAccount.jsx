@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import { registerUser } from "../api";
 
 {/* This page handles account creation. It ensures valid credentials are being entered before submission*/}
 
@@ -55,16 +56,23 @@ export function CreateAccount() {
 
     try {
       // Post to backend
-      const response = await axios.post("http://localhost:8000/signup", form);
+      //const response = await axios.post("http://localhost:8000/signup", form);
+    console.log(form.username, form.password)
+     let r = await registerUser(form.username, form.password, form.firstName, form.lastName, form.email);
+      console.log(r)
+      console.log(r.user_id)
 
-      // On success, update global auth and go to /home
-      const userData = response.data; // adjust if backend returns { user: {...} }
-      signIn(userData);
-      navigate("/home");
+      if (!r.user_id) {
+       setError("Username or email already exists.");
+      }
+     else{
+       navigate("/sign-in",{state: {un: form.username, pw: form.password}});
+     }
+
 
     } catch (err) {
       console.error(err);
-      setError("Could not create account. Try again.");
+      setError("Username or email already exists.");
     }
   };
 
@@ -76,7 +84,7 @@ export function CreateAccount() {
 
       <div className="fixed bottom-0 bg-transparent text-white p-2 flex justify-center z-50"> {/* Home button */}
         <button onClick={() => navigate("/")} title="Home" className="p-2 semi-rounded-full bg-transparent hover:bg-slate-700">
-          <span className="material-icons">home</span>
+          <span className="material-icons align-middle">home</span>
         </button>
       </div>
       
