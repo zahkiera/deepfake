@@ -4,10 +4,10 @@ import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { registerUser } from "../api";
 
-{/* This page handles account creation. It ensures valid credentials are being entered before submission*/}
+/* This page handles account creation. It ensures valid credentials are being entered before submission*/
 
 export function CreateAccount() {
-  {/* Form */}
+  // Form 
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -16,12 +16,12 @@ export function CreateAccount() {
     password: "",
   });
 
-  {/* Variables */}
+  // Variables 
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { signIn } = useAuth(); // bring in global auth
 
-  {/* Input values into the form */}
+  // Input values into the form
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -29,7 +29,7 @@ export function CreateAccount() {
     });
   };
 
-  {/* Submit the form if the credentials are valid */}
+   // Submit the form if the credentials are valid
   const handleSubmit = async (e) => {
     e.preventDefault();
 
