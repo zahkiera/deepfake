@@ -19,34 +19,26 @@ export function GameScreen() {
   const { user, signOut } = useAuth();
   const maxRounds = 5;
   const [questionCount, setQuestionCount] = useState(1);
-  console.log("Logged in as:", user?.username);
+  // console.log("Logged in as:", user?.username);
 
   useEffect(() => {
     const fetchQuestion = async () => {
       setIsLoading(true);
-      console.log("Fetching question...")
       const result = await getRandomQuestion();
-      console.log("Question result:", result)
-      
+
       if (result!=="undefined" && !result.error){
         const media = await getQuestionMedia(result.question_id);
-        console.log("Media response:", media)
         
         // transform backend image paths to match my folder
         const images = result.answers.map((a, index) => {
-          console.log("Answer data:", a);
           const isTextQuestion = !a.text.includes('.jpg') && !a.text.includes('.png');
-          console.log("Is text question:", isTextQuestion);
-          
           return {
             id: a.id,
             url: isTextQuestion ? null : getFullMediaUrl(media.media_urls[index]),
             text: isTextQuestion ? a.text : null,
-            isDeepfake: false, 
+            isDeepfake: a.correct,
           }
         });
-        
-        console.log("Final images array:", images)
 
         const correctIndex = Math.floor(Math.random() * images.length);
         images[correctIndex].isDeepfake = true; 
