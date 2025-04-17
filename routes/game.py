@@ -38,12 +38,12 @@ def get_random_question():
     question_id, question_type, question_text = question
 
     # Get all associated answers
-    cursor.execute("SELECT AnswerID, AnswerString FROM Answers WHERE QuestionID=?", (question_id,))
+    cursor.execute("SELECT AnswerID, Correct, AnswerString FROM Answers WHERE QuestionID=?", (question_id,))
     answers = cursor.fetchall()
 
     return {
         "question_id": question_id,
         "question_type": question_type,
         "question_text": question_text,
-        "answers": [{"id": aid, "text":atext} for (aid, atext) in answers]
+        "answers": [{"id": aid, "correct":c, "text":atext} for (aid,c, atext) in answers]
     }
