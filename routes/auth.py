@@ -26,8 +26,13 @@ def register_user(req: RegisterRequest):
         req.lastName,
         req.email
     )
+    # check username exists
     if user_id == -1:
         raise HTTPException(status_code=409, detail="Username already exists.")
+    # check email alr exists
+    elif user_id == -2:
+        raise HTTPException(status_code=409, detail="Email already exists.")
+
     return {"user_id": user_id, "message": "User registered successfully"}
 
 # Login Route --

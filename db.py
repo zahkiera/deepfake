@@ -215,7 +215,7 @@ def get_leaderboard(limit=10):
     SELECT u.Username, l.Score, l.ScoreDate
     FROM Leaderboard l
     JOIN Users u ON l.UserID = u.UserID
-    ORDER BY l.Score DESC, 1.ScoreDate ASC
+    ORDER BY l.Score DESC, l.ScoreDate ASC
     LIMIT ?
     ''', (limit,))
     result = cursor.fetchall()
@@ -223,29 +223,31 @@ def get_leaderboard(limit=10):
     return [{"username": row[0], "score": row[1], "date": row[2]} for row in result]
 
 
-def examples():
-    # create db
-    init_db()
-    # adding a user
-    uid = add_user("bloop", 1)
-    if uid != -1:
-        print("user added to db")
-    else:
-        print("user already exists")
+def get_media(question_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+       SELECT 
+           a.AnswerString
+       FROM Questions q
+       LEFT JOIN Answers a ON q.QuestionID = a.QuestionID
+       WHERE q.QuestionID = ?
+       ''', (question_id,))
+    return cursor.fetchall()
 
+def examples():
+    init_db()
     # adding question & answers
     qid = add_question('text', 'example question')
     add_answer(qid, True, "Answer1", "feedback1")
     add_answer(qid, False, "Answer2", "feedback2")
 
-    # displaying questions and answers
-    answers = get_question_with_answers(qid)
-    print(answers[0][0]) # print the question itself
-    for answer in answers:
-        print(answer[2])
+
+    qid2 = add_question('image', 'Select the Deepfake')
+    add_answer(qid2, True, r"floridapoly_fulllogo_rgb_fc.jpg", "feedback1")
+    add_answer(qid2, False, r"floridapoly_markonlylogo_rgb_fc.jpg", "feedback2")
 
 
-# example api call for backend
-#@app.route('/api/question/<int:question_id>', methods=['GET'])
-#def api_get_question(question_id):
-   # return jsonify(get_question_with_answers(question_id)), 200  return jsonified list of answers
+
+#examples()
+
