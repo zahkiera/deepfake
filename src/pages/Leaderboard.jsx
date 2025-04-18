@@ -28,7 +28,7 @@ export function Leaderboard() {
   return (
     <div className="min-h-screen bg-slate-900 text-white p-8 flex flex-col items-center"> {/* Page contianer */}
       <Link to="/" className="text-2xl font-bold mb-6 font-mono text-white hover:text-slate-300"> {/* Title that can take the user to the homepage */}
-        Deepfake Detector
+        Detect the Deepfake
       </Link>
       
       <h2 className="text-xl mb-4 font-mono">Top 5 Players</h2>
