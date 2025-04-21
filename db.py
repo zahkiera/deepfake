@@ -150,20 +150,25 @@ def add_answer(question_id, correct, answer_string, feedback):
 def update_leaderboard(user_id, score):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute('''
-    INSERT INTO Leaderboard (UserID, Score)
-    VALUES (?, ?)
-    ''', (user_id, score))
 
-    # update user's high score if higher
+    # Check if user already has a score
     cursor.execute('''
-    UPDATE Users 
-    SET HighScore = CASE 
-        WHEN HighScore < ? THEN ? 
-        ELSE HighScore 
-    END 
-    WHERE UserID = ?
-    ''', (score, score, user_id))
+    SELECT Score FROM Leaderboard WHERE UserID = ?
+    ''', (user_id,))
+    existing_score = cursor.fetchone()
+
+    if existing_score:
+        if score > existing_score[0]:
+            cursor.execute('''
+            UPDATE Leaderboard 
+            SET Score = ?
+            WHERE UserID = ?
+            ''', (score, user_id))
+    else:
+        cursor.execute('''
+        INSERT INTO Leaderboard (UserID, Score)
+        VALUES (?, ?)
+        ''', (user_id, score))
 
     conn.commit()
     conn.close()
@@ -225,15 +230,15 @@ def get_leaderboard(limit=10):
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute('''
-    SELECT u.Username, l.Score, l.ScoreDate
+    SELECT u.Username, l.Score
     FROM Leaderboard l
     JOIN Users u ON l.UserID = u.UserID
-    ORDER BY l.Score DESC, l.ScoreDate ASC
+    ORDER BY l.Score DESC 
     LIMIT ?
     ''', (limit,))
     result = cursor.fetchall()
     conn.close()
-    return [{"username": row[0], "score": row[1], "date": row[2]} for row in result]
+    return [{"username": row[0], "score": row[1]} for row in result]
 
 
 def get_media(question_id):
@@ -249,22 +254,23 @@ def get_media(question_id):
     return cursor.fetchall()
 
 def examples():
-    init_db()
-    # adding question & answers
-    qid = add_question('text', 'example question')
-    add_answer(qid, True, "Answer1", "feedback1")
-    add_answer(qid, False, "Answer2", "feedback2")
-
-
-    qid2 = add_question('image', 'Select the Deepfake')
-    add_answer(qid2, True, r"floridapoly_fulllogo_rgb_fc.jpg", "feedback1")
-    add_answer(qid2, False, r"floridapoly_markonlylogo_rgb_fc.jpg", "feedback2")
+    # init_db()
+    # # adding question & answers
+     qid = add_question('text', 'example question')
+     add_answer(qid, True, "Answer1", "feedback1")
+     add_answer(qid, False, "Answer2", "feedback2")
+    #
+    #
+     qid2 = add_question('image', 'Select the Deepfake')
+     add_answer(qid2, True, r"floridapoly_fulllogo_rgb_fc.jpg", "feedback1")
+     add_answer(qid2, False, r"floridapoly_markonlylogo_rgb_fc.jpg", "feedback2")
 
 
 
 #examples()
 
 
+<<<<<<< HEAD
 # Setting db
 # Example: store in a tokens table with columns: email, token, expires_at
 
@@ -420,3 +426,5 @@ def update_user_email(username, password, current_email, new_email):
     conn.commit()
     conn.close()
     return updated
+=======
+>>>>>>> bb4f1a950558536135d9dc6bc4e5063da0c2764d
