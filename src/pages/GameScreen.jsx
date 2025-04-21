@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from "../context/AuthContext";
-import { getFullMediaUrl, getRandomQuestion, submitAnswer, getQuestionMedia } from "../api";
-
+import { getFullMediaUrl, getRandomQuestion, submitAnswer, getQuestionMedia, submitScore } from "../api";
 
 // This page is the game container. It displays 4 images or videos which the user may choose from. 
 // Runner component is available on this page 
@@ -19,7 +18,9 @@ export function GameScreen() {
   const { user, signOut } = useAuth();
   const maxRounds = 5;
   const [questionCount, setQuestionCount] = useState(1);
-  // console.log("Logged in as:", user?.username);
+  const [gameFinished, setGameFinished] = useState(false);
+
+  //console.log("Logged in as:", user);
 
   useEffect(() => {
     const fetchQuestion = async () => {
@@ -28,7 +29,6 @@ export function GameScreen() {
 
       if (result!=="undefined" && !result.error){
         const media = await getQuestionMedia(result.question_id);
-        
         // transform backend image paths to match my folder
         const images = result.answers.map((a, index) => {
           const isTextQuestion = !a.text.includes('.jpg') && !a.text.includes('.png');
@@ -60,6 +60,18 @@ export function GameScreen() {
      }
   }, [question]);
 
+  useEffect(() => {
+    if (gameFinished) {
+      const submitFinalScore = async () => {
+        if (user?.user_id) {
+        const res =  await submitScore(user.user_id, score);
+        }
+        navigate("/fin", { state: { score } });
+      };
+      submitFinalScore();
+    }
+  }, [gameFinished, score, user, navigate]);
+
   {/* Function to handle user answer selection */}
   const handleAnswer = async (image) => {
     if (isAnswered) return;
@@ -69,7 +81,7 @@ export function GameScreen() {
 
     let earned = 0;
 
-    if (image.isDeepfake) {
+    if (image.id === correctId) {  // Check if selected answer is correct
       earned = 10;
       setScore((prev) => prev + earned);
     }
@@ -97,7 +109,7 @@ export function GameScreen() {
     setQuestionCount((prev) => {
       const newCount = prev + 1;
       if(newCount > maxRounds) {
-        navigate("/fin", { state: { score } });
+        setGameFinished(true);
       }
       return newCount;
     });

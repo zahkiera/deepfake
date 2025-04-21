@@ -47,6 +47,15 @@ export async function getLeaderboard(limit = 10) {
   return await res.json();
 }
 
+export async function submitScore(user_id, score){
+  const res = await fetch(`${API_BASE_URL}/leaderboard/submit_score`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user_id, score }),
+  });
+
+  return await res.json();
+}
 
 export async function getQuestionMedia(questionId) {
   const res = await fetch(`${API_BASE_URL}/media/${questionId}`);
@@ -54,5 +63,6 @@ export async function getQuestionMedia(questionId) {
 }
 
 export function getFullMediaUrl(mediaPath) {
+  console.log(`http://localhost:8000/media/${mediaPath}`)
   return `http://localhost:8000/media/${mediaPath}`;
 }
