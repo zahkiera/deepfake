@@ -33,7 +33,7 @@ const pw = l.state?.pw || "";
       console.log(response)
        if(response.user_id >= 0){
          // save username
-        signIn({username: username})
+        signIn({username: username, user_id: response.user_id})
          // navigate to home
          navigate(destination, { replace: true });
        }

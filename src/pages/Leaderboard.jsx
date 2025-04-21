@@ -9,7 +9,7 @@ import { getLeaderboard } from "../api";
 export function Leaderboard() {
   const [leaders, setLeaders] = useState([]);
   const { user, signOut } = useAuth();
-  console.log("Logged in as:", user?.username);
+  //console.log("Logged in as:", user?.username);
 
   // Communicate with backend to find top players 
   useEffect(() => {

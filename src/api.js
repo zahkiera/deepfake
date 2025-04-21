@@ -52,12 +52,26 @@ export async function getLeaderboard(limit = 10) {
   return await res.json();
 }
 
+<<<<<<< HEAD
+=======
+export async function submitScore(user_id, score){
+  const res = await fetch(`${API_BASE_URL}/leaderboard/submit_score`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user_id, score }),
+  });
+
+  return await res.json();
+}
+
+>>>>>>> 2a8b2f5a8b1c47f8ff80f8132639a70a8aa5e619
 export async function getQuestionMedia(questionId) {
   const res = await fetch(`${API_BASE_URL}/media/${questionId}`);
   return await res.json();
 }
 
 export function getFullMediaUrl(mediaPath) {
+  console.log(`http://localhost:8000/media/${mediaPath}`)
   return `http://localhost:8000/media/${mediaPath}`;
 }
 
