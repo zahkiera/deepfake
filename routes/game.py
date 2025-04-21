@@ -14,13 +14,12 @@ class SubmitRequest(BaseModel):
 
 @router.post("/submit")
 def submit_answer(data: SubmitRequest):
-    #update leaderboard with score if user is not guest
-    if data.user_id != -1:
-        update_leaderboard(data.user_id, data.score_earned)
     return {
         "message": "Answer submitted.",
         "earned": data.score_earned
     }
+
+
 
 @router.get("/random")
 def get_random_question():
