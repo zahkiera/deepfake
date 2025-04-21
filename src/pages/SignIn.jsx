@@ -1,9 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
 import {useNavigate, Link, useLocation} from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import {loginUser, registerUser} from "../api.js";
-import signIn from "../SignIn.jsx";
+import {loginUser} from "../api.js";
 
 {/* This page handles user sign in and designs a standard sign in page. */}
 {/* Communicates with the db to verify user credentials */}
@@ -20,6 +18,10 @@ const pw = l.state?.pw || "";
   const [error, setError] = useState("");
   const { signIn } = useAuth();
 
+  const destination = l.state?.from || '/home';
+  const message = l.state?.message;
+
+
 
   {/* Function to handle sign in. Communicate with backend to verify credentials. Once verified, navigate to home page */}
   const handleSignIn = async (e) => {
@@ -33,12 +35,11 @@ const pw = l.state?.pw || "";
          // save username
         signIn({username: username})
          // navigate to home
-         navigate("/home");
+         navigate(destination, { replace: true });
        }
        else if (response.detail === 'Invalid credentials.'){
          setError("Invalid login credentials");
        }
-
 
     //  navigate("/home");
     } catch (err) {
@@ -50,18 +51,23 @@ const pw = l.state?.pw || "";
   return (
     
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white px-4 font-mono"> {/* Page container. Define bckgrnd, text, and font */}
-      
       {/* Home button at bottom that navigates to landing page */}
       <div className="fixed bottom-0 w-full bg-slate-900 text-white p-2 flex justify-center z-50">
         <button onClick={() => navigate("/")} title="Home" className="p-2 semi-rounded-full bg-slate-900 hover:bg-slate-700">
           <span className="material-icons align-middle">home</span>
         </button>
       </div>
+      {message && (
+        <div className="alert alert-info text-red-500 text-sm">
+          {message}
+        </div>
+      )}
 
       {/* Title */}
       <Link to="/" className="mb-6 text-2xl font-bold font-mono text-white hover:text-slate-300">
         Detect the Deepfake
       </Link>
+
 
       {/* Sign in form */}
       <div className="bg-slate-800 p-6 rounded-lg shadow-md w-full max-w-md">

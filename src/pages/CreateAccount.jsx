@@ -58,7 +58,13 @@ export function CreateAccount() {
       // Post to backend
       //const response = await axios.post("http://localhost:8000/signup", form);
     console.log(form.username, form.password)
-     let r = await registerUser(form.username, form.password, form.firstName, form.lastName, form.email);
+    let r = await registerUser({
+      username: form.username,
+      password: form.password,
+      firstName: form.firstName,
+      lastName: form.lastName,
+      email: form.email
+    });
       console.log(r)
       console.log(r.user_id)
 
