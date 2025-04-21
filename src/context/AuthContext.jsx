@@ -1,11 +1,11 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
-{/* This file handles global authentication */}
+/* This file handles global authentication */
 
 const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState("") // You can optionally initialize from localStorage
+  const [user, setUser] = useState(null) 
   const [loading, setLoading] = useState(true);
 
 
@@ -21,8 +21,12 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
-    if(savedUser !== "undefined"){
-      setUser(JSON.parse(savedUser));
+    if (savedUser) {
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch (error) {
+        console.error("Failed to parse user from localStorage", error);
+      }
     }
     setLoading(false);
   }, []);
