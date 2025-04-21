@@ -1,6 +1,9 @@
 import sqlite3
 import hashlib
 
+from datetime import datetime, timezone
+datetime.now(timezone.utc)
+
 DB_NAME = "DeepfakeGame.db"
 
 def get_connection():
@@ -20,7 +23,8 @@ def init_db():
         FirstName TEXT,
         LastName TEXT,
         Email TEXT,
-        HighScore INTEGER DEFAULT 0
+        HighScore INTEGER DEFAULT 0,
+        LastEmailUpdate TEXT
     )
     ''')
 
@@ -53,6 +57,15 @@ def init_db():
         Score INTEGER DEFAULT 0,
         ScoreDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (UserID) REFERENCES Users(UserID)
+    )
+    ''')
+
+    # create PasswordResetTokens table
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS PasswordResetTokens (
+        Email TEXT PRIMARY KEY,
+        Token TEXT NOT NULL,
+        Expiry TIMESTAMP NOT NULL
     )
     ''')
 
@@ -251,3 +264,159 @@ def examples():
 
 #examples()
 
+
+# Setting db
+# Example: store in a tokens table with columns: email, token, expires_at
+
+def get_user_by_email(email: str):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+    SELECT UserID, Username, Email
+    FROM Users
+    WHERE Email = ?
+    ''', (email,))
+    result = cursor.fetchone()
+    conn.close()
+    return result  # will be None if not found
+
+def update_username(user_id, new_username):
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    # Check if username exists
+    cursor.execute('''SELECT 1 FROM Users WHERE Username=?''', (new_username,))
+    if cursor.fetchone() is not None:
+        conn.close()
+        return -1  # Username already exists
+        
+    cursor.execute('''
+    UPDATE Users SET Username = ? WHERE UserID = ?
+    ''', (new_username, user_id))
+    conn.commit()
+    conn.close()
+    return 1  # Succes
+
+def update_email(user_id, new_email):
+    conn = get_connection()
+    cursor = conn.cursor()
+    now = datetime.datetime.utcnow().isoformat()
+    
+    # Check if email exists
+    cursor.execute('''SELECT 1 FROM Users WHERE Email=?''', (new_email,))
+    if cursor.fetchone() is not None:
+        conn.close()
+        return -1  # Email already exists
+        
+    cursor.execute('''
+    UPDATE Users SET Email = ?, LastEmailUpdate = ? WHERE UserID = ?
+    ''', (new_email, now, user_id))
+    conn.commit()
+    updated = cursor.rowcount
+    conn.close()
+    return updated  # Success
+
+def update_password(user_id, new_password):
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    hashed_pw = hash_password(new_password)
+    cursor.execute('''
+    UPDATE Users SET Password = ? WHERE UserID = ?
+    ''', (hashed_pw, user_id))
+    conn.commit()
+    conn.close()
+    return 1  # Success
+
+def authenticate_user_by_id(user_id, password):
+    conn = get_connection()
+    cursor = conn.cursor()
+    hashed_pw = hash_password(password)
+    cursor.execute('''
+    SELECT UserID 
+    FROM Users 
+    WHERE UserID = ? AND Password = ?
+    ''', (user_id, hashed_pw))
+    result = cursor.fetchone()
+    conn.close()
+    return result[0] if result else None
+
+
+def delete_user_by_username(username):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        
+        # First, check if the user exists
+        cursor.execute('SELECT 1 FROM Users WHERE Username = ?', (username,))
+        if not cursor.fetchone():
+            conn.close()
+            return 0  # User not found
+            
+        # Then delete the user
+        cursor.execute('DELETE FROM Users WHERE Username = ?', (username,))
+        rows_deleted = cursor.rowcount
+        conn.commit()
+        conn.close()
+        return rows_deleted
+    except Exception as e:
+        print(f"Error deleting user {username}: {str(e)}")
+        # Try to rollback if possible
+        try:
+            if conn:
+                conn.rollback()
+                conn.close()
+        except:
+            pass
+        return 0  # Return 0 to indicate failure   
+
+
+def delete_user_by_email(email):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM Users WHERE Email = ?', (email,))
+    rows_deleted = cursor.rowcount
+    conn.commit()
+    conn.close()
+    return rows_deleted
+
+def get_user_by_id(user_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+    SELECT UserID, Username, FirstName, LastName, Email, HighScore
+    FROM Users
+    WHERE UserID = ?
+    ''', (user_id,))
+    result = cursor.fetchone()
+    conn.close()
+    return result    
+
+def get_email(user_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+
+    Select Email
+    FROM Users
+    WHERE UserID = ?
+    ''', (user_id,))
+    result = cursor.fetchone()
+    conn.close()
+    return result
+
+def update_user_email(username, password, current_email, new_email):
+    conn = get_connection()
+    cursor = conn.cursor()
+    now = datetime.datetime.utcnow().isoformat()
+
+    cursor.execute("""
+        UPDATE Users 
+        SET Email = ?, LastEmailUpdate = ? 
+        WHERE Username = ? AND Email = ?""",
+        (new_email, now, username, current_email))
+    
+    updated = cursor.rowcount
+    conn.commit()
+    conn.close()
+    return updated
