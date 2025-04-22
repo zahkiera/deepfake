@@ -34,7 +34,10 @@ export async function getQuestion(questionId) {
 
 // Get a random question
 export async function getRandomQuestion() {
+  console.log("Fetching random question...");
   const res = await fetch(`${API_BASE_URL}/game/random`);
+
+  console.log(res)
   return await res.json();
 }
 

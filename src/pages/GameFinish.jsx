@@ -33,7 +33,7 @@ export function GameFinish() {
 
         {/* Nav buttons */}
         <button 
-          onClick={() => navigate("/game")}
+          onClick={() => navigate("/play")}
           className="mb-2 px-4 py-2 bg-blue-700 rounded hover:bg-blue-600"
         >
           Play Again
