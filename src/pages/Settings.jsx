@@ -299,7 +299,7 @@ const handleDeactivateAccount = async () => {
                 <div className="flex mb-2">
                   <input
                     type="text"
-                    className="flex-grow p-2 border rounded mr-2 text-black"
+                    className="flex-grow p-2 border rounded mr-2 bg-white text-black"
                     value={newUsername}
                     placeholder='Enter new username'
                     onChange={(e) => setNewUsername(e.target.value)}
@@ -324,7 +324,7 @@ const handleDeactivateAccount = async () => {
                 <div className="mb-2">
                   <input
                     type="password"
-                    className="w-full p-2 border rounded text-black"
+                    className="w-full p-2 border rounded text-black bg-white"
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
                     placeholder="Enter current password to confirm"
@@ -384,7 +384,7 @@ const handleDeactivateAccount = async () => {
                 <div className="flex mb-2">
                   <input
                     type="email"
-                    className="flex-grow p-2 border rounded mr-2 text-black"
+                    className="flex-grow p-2 border rounded mr-2 text-black bg-white"
                     placeholder='Enter new email'
                     value={newEmail}
                     onChange={(e) => setNewEmail(e.target.value)}
@@ -409,7 +409,7 @@ const handleDeactivateAccount = async () => {
                 <div className="mb-2">
                   <input
                     type="password"
-                    className="w-full p-2 border rounded text-black"
+                    className="w-full p-2 border rounded text-black bg-white"
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
                     placeholder="Enter current password to confirm"
@@ -445,7 +445,7 @@ const handleDeactivateAccount = async () => {
             <input
               id="current-password"
               type="password"
-              className="w-full p-2 border rounded text-black"
+              className="w-full p-2 border rounded text-black bg-white"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               required
@@ -453,19 +453,19 @@ const handleDeactivateAccount = async () => {
           </div>
           
           <div className="mb-4">
-            <label className="block text-gray-300 mb-2" htmlFor="new-password">
+            <label className="block text-gray-300 mb-2 " htmlFor="new-password">
               New Password
             </label>
               <input
               id="new-password"
               type="password"
-              className="w-full p-2 border rounded text-black"
+              className="w-full p-2 border rounded text-black bg-white"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
               minLength={10}
             />
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-gray-500 mt-1 ">
               Password must be at least 10 characters long.
             </p>
           </div>
@@ -477,7 +477,7 @@ const handleDeactivateAccount = async () => {
             <input
               id="confirm-password"
               type="password"
-              className="w-full p-2 border rounded text-black"
+              className="w-full p-2 border rounded text-black bg-white"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
@@ -528,7 +528,7 @@ const handleDeactivateAccount = async () => {
                 <input
                   id="deactivate-password"
                   type="password"
-                  className="w-full p-2 border rounded text-black"
+                  className="w-full p-2 border rounded text-black bg-white"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   required

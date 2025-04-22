@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from "../context/AuthContext";
 import { getLeaderboard } from "../api";
-
+import Runner from '../components/Runner';
 
 // This page establishes the leaderboard.  
 
@@ -53,6 +53,7 @@ export function Leaderboard() {
           </table>
         )}
       </div>
+        <Runner/>
     </div>
   )
 }
