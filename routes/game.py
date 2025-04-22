@@ -30,19 +30,18 @@ def get_random_question():
     cursor.execute("SELECT * FROM Questions ORDER BY RANDOM() LIMIT 1")
     question = cursor.fetchone()
 
-
     if question is None: 
         return {"Error": "No questions found"}
 
     question_id, question_type, question_text = question
 
     # Get all associated answers
-    cursor.execute("SELECT AnswerID, Correct, AnswerString FROM Answers WHERE QuestionID=?", (question_id,))
+    cursor.execute("SELECT AnswerID, Correct, AnswerString, Feedback FROM Answers WHERE QuestionID=?", (question_id,))
     answers = cursor.fetchall()
 
     return {
         "question_id": question_id,
         "question_type": question_type,
         "question_text": question_text,
-        "answers": [{"id": aid, "correct":c, "text":atext} for (aid,c, atext) in answers]
+        "answers": [{"id": aid, "correct":c, "text":atext, "feedback":f} for (aid,c, atext,f) in answers]
     }
