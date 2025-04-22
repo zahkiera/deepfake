@@ -254,7 +254,7 @@ def get_media(question_id):
     return cursor.fetchall()
 
 def examples():
-    # init_db()
+     init_db()
     # # adding question & answers
      qid = add_question('text', 'example question')
      add_answer(qid, True, "Answer1", "feedback1")
@@ -270,7 +270,7 @@ def examples():
 #examples()
 
 
-<<<<<<< HEAD
+
 # Setting db
 # Example: store in a tokens table with columns: email, token, expires_at
 
@@ -426,5 +426,4 @@ def update_user_email(username, password, current_email, new_email):
     conn.commit()
     conn.close()
     return updated
-=======
->>>>>>> bb4f1a950558536135d9dc6bc4e5063da0c2764d
+

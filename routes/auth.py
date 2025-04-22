@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Query, Depends
-from sqlalchemy.orm import Session
+
 
 from pydantic import BaseModel, constr
 from db import add_user, authenticate_user, get_connection
