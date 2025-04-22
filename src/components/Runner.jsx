@@ -16,7 +16,7 @@ export function Runner() {
   // Update login state whenever user changes
   useEffect(() => {
     setIsLoggedIn(!!user);
-    console.log("Auth state updated in Runner:", !!user);
+  
   }, [user]);
   
   // Hide Runner on specific pages

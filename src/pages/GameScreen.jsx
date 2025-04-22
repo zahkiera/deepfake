@@ -7,8 +7,8 @@ import Runner from '../components/Runner';
 
 // This page is the game container. It displays 4 images or videos which the user may choose from. 
 // Runner component is available on this page 
+let askedQuestions = Array(100).fill(false);
 
-// Add this shuffle function at the top of the file
 function shuffleArray(array) {
   const newArray = [...array];
   for (let i = newArray.length - 1; i > 0; i--) {
@@ -28,17 +28,28 @@ export function GameScreen() {
   const [question, setQuestion] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { user, signOut } = useAuth();
-  const maxRounds = 5;
+  const maxRounds = 10;
   const [questionCount, setQuestionCount] = useState(1);
   const [gameFinished, setGameFinished] = useState(false);
   const [feedback, setFeedback] = useState({ show: false, isCorrect: false, correctAnswer: null, explanation: null });
-
+  
   //console.log("Logged in as:", user);
+
+  // Reset askedQuestions when component mounts
+  useEffect(() => {
+    askedQuestions = Array(100).fill(false);
+  }, []);
 
   useEffect(() => {
     const fetchQuestion = async () => {
       setIsLoading(true);
-      const result = await getRandomQuestion();
+      let result = await getRandomQuestion();
+
+      while(askedQuestions[result.question_id] === true){
+        result = await getRandomQuestion();
+      }
+
+      askedQuestions[result.question_id] = true;
 
       if (result!=="undefined" && !result.error){
         const media = await getQuestionMedia(result.question_id);
@@ -114,7 +125,7 @@ export function GameScreen() {
       show: true,
       isCorrect: isCorrect,
       correctAnswer: correctAnswer,
-      explanation: correctAnswer?.feedback || 'This was the deepfake. Look for unnatural features, background inconsistencies, or unusual details.'
+      explanation: correctAnswer?.feedback || 'This was the real image. Look for unnatural features, background inconsistencies, or unusual details.'
     });
 
     setIsAnswered(true);
@@ -141,6 +152,7 @@ export function GameScreen() {
     setQuestionCount((prev) => {
       const newCount = prev + 1;
       if(newCount > maxRounds) {
+        askedQuestions = Array(100).fill(false);
         setGameFinished(true);
       }
       return newCount;
@@ -235,7 +247,7 @@ export function GameScreen() {
                   <img
                     src={item.url}
                     alt="choice"
-                    className="w-80 h-80 object-cover"
+                    className="w-80 h-80 object-contain"
                   />
                 )
               ) : (

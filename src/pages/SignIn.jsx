@@ -77,7 +77,7 @@ const pw = l.state?.pw || "";
           <input
             type="username"
             placeholder="Username"
-            className="w-full p-2 rounded text-black"
+            className="w-full p-2 rounded text-black bg-white"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
@@ -86,7 +86,7 @@ const pw = l.state?.pw || "";
           <input
             type="password"
             placeholder="Password"
-            className="w-full p-2 rounded text-black"
+            className="w-full p-2 rounded text-black bg-white"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required

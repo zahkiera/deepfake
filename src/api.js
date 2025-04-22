@@ -34,10 +34,7 @@ export async function getQuestion(questionId) {
 
 // Get a random question
 export async function getRandomQuestion() {
-  console.log("Fetching random question...");
   const res = await fetch(`${API_BASE_URL}/game/random`);
-
-  console.log(res)
   return await res.json();
 }
 
@@ -73,7 +70,6 @@ export async function getQuestionMedia(questionId) {
 }
 
 export function getFullMediaUrl(mediaPath) {
-  console.log(`http://localhost:8000/media/${mediaPath}`)
   return `http://localhost:8000/media/${mediaPath}`;
 }
 
@@ -83,12 +79,6 @@ export async function updateUsername(username, password, newUsername) {
   if (!username || !password || !newUsername) {
     throw new Error("Missing required fields for username update");
   }
-
-  console.log("Sending payload:", {
-    username,
-    password,
-    new_username: newUsername
-  });
 
   try {
     const res = await fetch(`${API_BASE_URL}/user/update-username`, {
