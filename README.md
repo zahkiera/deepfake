@@ -34,8 +34,7 @@ A full stack educational game that helps users learn how to detect deepfake imag
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/deepfake-game.git
-cd deepfake-game 
+git clone https://github.com/your-username/Secure-Software-Final-Project.git 
 ```
 
 ### 2. Backend Setup
