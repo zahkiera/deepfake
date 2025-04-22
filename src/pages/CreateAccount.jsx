@@ -57,7 +57,6 @@ export function CreateAccount() {
     try {
       // Post to backend
       //const response = await axios.post("http://localhost:8000/signup", form);
-    console.log(form.username, form.password)
     let r = await registerUser({
       username: form.username,
       password: form.password,
@@ -65,8 +64,6 @@ export function CreateAccount() {
       lastName: form.lastName,
       email: form.email
     });
-      console.log(r)
-      console.log(r.user_id)
 
       if (!r.user_id) {
        setError("Username or email already exists.");

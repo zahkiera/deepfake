@@ -70,7 +70,6 @@ export function Settings () {
   // Handle username update
   const handleUsernameUpdate = async (new_username) => {
     setLoading(true);
-    console.log("Attempting to update username for:", user);
 
     try {
       if (!currentPassword) {
@@ -214,16 +213,16 @@ const handleDeactivateAccount = async () => {
   }
   
   try {
-    console.log("Attempting to deactivate account for:", user?.username);
-    console.log("Sending request with:", user?.username, currentPassword);
+   // console.log("Attempting to deactivate account for:", user?.username);
+   // console.log("Sending request with:", user?.username, currentPassword);
 
     const response = await deactivateAccount(
       user?.username, 
       currentPassword
     );
     
-    console.log("Deactivation response:", response);
-    
+   // console.log("Deactivation response:", response);
+
     setMessage({ type: 'success', text: 'Account deactivated successfully' });
     signOut(); // Make sure to sign out after deactivation
     navigate("/"); // Navigate to home page

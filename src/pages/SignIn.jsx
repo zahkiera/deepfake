@@ -30,7 +30,7 @@ const pw = l.state?.pw || "";
 
     try {
        const response = await loginUser(username, password);
-      console.log(response)
+     //  console.log(response)
        if(response.user_id >= 0){
          // save username
         signIn({username: username, user_id: response.user_id})

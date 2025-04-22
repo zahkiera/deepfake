@@ -28,7 +28,7 @@ export function GameScreen() {
   const [question, setQuestion] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { user, signOut } = useAuth();
-  const maxRounds = 10;
+  const maxRounds = 5;
   const [questionCount, setQuestionCount] = useState(1);
   const [gameFinished, setGameFinished] = useState(false);
   const [feedback, setFeedback] = useState({ show: false, isCorrect: false, correctAnswer: null, explanation: null });

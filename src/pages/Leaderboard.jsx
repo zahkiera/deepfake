@@ -44,14 +44,12 @@ export function Leaderboard() {
                 <th className="py-2 text-right font-mono">High Score</th>
               </tr>
             </thead>
-            <tbody> 
-              {leaders.map((user, idx) => (
-                <tr key={idx} className="border-b border-slate-700">
-                  <td className="py-2">{user.username}</td>
-                  <td className="py-2 text-right">{user.score}</td>
-                </tr>
-              ))}
-            </tbody>
+            <tbody>{leaders.map((user, idx) => (
+              <tr key={idx} className="border-b border-slate-700">
+                <td className="py-2">{user.username}</td>
+                <td className="py-2 text-right">{user.score}</td>
+              </tr>
+            ))}</tbody>
           </table>
         )}
       </div>
