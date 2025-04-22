@@ -89,7 +89,7 @@ export function CreateAccount() {
       </Link>
 
       <div className="fixed bottom-0 bg-transparent text-white p-2 flex justify-center z-50"> {/* Home button */}
-        <button onClick={() => navigate("/")} title="Home" className="p-2 semi-rounded-full bg-transparent hover:bg-slate-700">
+        <button onClick={() => navigate("/")} title="Home" className="p-2 rounded-full bg-transparent hover:bg-slate-700">
           <span className="material-icons align-middle">home</span>
         </button>
       </div>

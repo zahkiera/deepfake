@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import Runner from "../components/Runner";
 
 {/* This page defines the game home screen. Can navigate to the game, leaderboard, a tutorial, and has a nav bar that goes to settings and has a log in/log out option*/}
 {/* The runner component is included on this page */}
@@ -20,6 +21,7 @@ export function HomeScreen() {
           Tutorial
         </Link> 
 
+        <Runner/>
         </div>
     );
 }

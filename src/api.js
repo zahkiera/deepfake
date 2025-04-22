@@ -52,8 +52,7 @@ export async function getLeaderboard(limit = 10) {
   return await res.json();
 }
 
-<<<<<<< HEAD
-=======
+
 export async function submitScore(user_id, score){
   const res = await fetch(`${API_BASE_URL}/leaderboard/submit_score`, {
     method: "POST",
@@ -64,7 +63,7 @@ export async function submitScore(user_id, score){
   return await res.json();
 }
 
->>>>>>> 2a8b2f5a8b1c47f8ff80f8132639a70a8aa5e619
+
 export async function getQuestionMedia(questionId) {
   const res = await fetch(`${API_BASE_URL}/media/${questionId}`);
   return await res.json();
@@ -169,7 +168,7 @@ export async function getEmail(username, password) {
       throw new Error('Failed to fetch email');
     }
 
-    const data = await response.json();
+    const data = await res.json();
     return data.email;
   } catch (error) {
     console.error('Error fetching email:', error);

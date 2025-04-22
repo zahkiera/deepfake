@@ -50,3 +50,5 @@ export function Runner() {
     </div>
   );
 }
+
+export default Runner;

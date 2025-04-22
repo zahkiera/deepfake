@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from "../context/AuthContext";
 import { getFullMediaUrl, getRandomQuestion, submitAnswer, getQuestionMedia, submitScore } from "../api";
+import Runner from '../components/Runner';
+
 
 // This page is the game container. It displays 4 images or videos which the user may choose from. 
 // Runner component is available on this page 
@@ -209,6 +211,7 @@ export function GameScreen() {
           </button>
         </div>
       )}
+      <Runner/>
     </div>
   )
 }

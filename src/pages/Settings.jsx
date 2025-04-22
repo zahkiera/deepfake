@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'; 
 import { useAuth } from '../context/AuthContext';
+import Runner from '../components/Runner';
 import { 
   updateUsername, 
   updateEmail,
@@ -69,7 +70,8 @@ export function Settings () {
   // Handle username update
   const handleUsernameUpdate = async (new_username) => {
     setLoading(true);
-    
+    console.log("Attempting to update username for:", user);
+
     try {
       if (!currentPassword) {
         setMessage({ type: 'error', text: 'Current password is required' });
@@ -84,7 +86,7 @@ export function Settings () {
       );
 
       
-      
+      signIn({username: newUsername, user_id: user.user_id});
       setMessage({ type: 'success', text: 'Username updated successfully' });
       setEditingUsername(false);
       setCurrentPassword('');
@@ -557,7 +559,7 @@ const handleDeactivateAccount = async () => {
           )}
         </div>
       )}
-
+    <Runner/>
     </div>
   );
 };
