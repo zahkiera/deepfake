@@ -48,12 +48,13 @@ pip install -r requirements.txt
 
 #### Run FastAPI Server
 ```bash
+cd Secure-Software-Final-Project
 uvicorn main:app --reload
 ```
 
 ### 3. Frontend Setup
 ```bash
-cd frontend-folder
+Open a new terminal
 npm install
 npm run dev
 ```
