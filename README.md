@@ -36,7 +36,7 @@ A full stack educational game that helps users learn how to detect deepfake imag
 Open a new folder in VS Code and type:
 ```bash
 git init
-git clone https://github.com/ZainaK05/Secure-Software-Final-Project.git 
+git clone https://github.com/zahkiera/deepfake.git 
 ```
 
 ### 2. Backend Setup
@@ -45,7 +45,7 @@ git clone https://github.com/ZainaK05/Secure-Software-Final-Project.git
 ```bash
 python -m venv venv # (or py -m venv venv)
 source venv/bin/activate  # On Windows use: .\venv\Scripts\activate (make sure you're in the parent directory of your venv folder when trying to activate it)
-cd Secure-Software-Final-Project
+cd deepfake
 pip install -r requirements.txt
 ```
 
@@ -58,7 +58,7 @@ uvicorn main:app --reload --host 127.0.0.1 --port 8000
 ### 3. Frontend Setup
 Open a new terminal
 ```bash
-cd Secure-Software-Final-Project
+cd deepfake
 cd frontend
 npm install
 npm run dev
