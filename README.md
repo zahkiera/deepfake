@@ -33,7 +33,9 @@ A full stack educational game that helps users learn how to detect deepfake imag
 ## Getting Started
 
 ### 1. Clone the repository
+Open a new folder in VS Code and type:
 ```bash
+git init
 git clone https://github.com/ZainaK05/Secure-Software-Final-Project.git 
 ```
 
@@ -41,21 +43,26 @@ git clone https://github.com/ZainaK05/Secure-Software-Final-Project.git
 #### Install Python packages
 
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows use: venv\Scripts\activate
+python -m venv venv # (or py -m venv venv)
+source venv/bin/activate  # On Windows use: .\.venv\Scripts\activate (make sure you're in the parent directory of your venv folder when trying to activate it)
 pip install -r requirements.txt
 ```
 
 #### Run FastAPI Server
 ```bash
 cd Secure-Software-Final-Project
-uvicorn main:app --reload
+cd backend
+uvicorn main:app --reload --host 127.0.0.1 --port 8000
 ```
 
 ### 3. Frontend Setup
-```bash
 Open a new terminal
+```bash
+cd Secure-Software-Final-Project
+cd frontend
 npm install
 npm run dev
 ```
+The link will pop up in the terminal, crtl+click to navigate to the game !
+
 **Make sure the backend is running at http:// 127.0.0.1:8000 and frontend at http:// localhost:5173.**
