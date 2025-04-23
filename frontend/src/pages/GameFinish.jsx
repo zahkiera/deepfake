@@ -11,7 +11,7 @@ export function GameFinish() {
   const location = useLocation()
   const navigate = useNavigate();
   const score = location.state?.score || 0;
-  const str = "You have a good eye!"
+  const str = "Perfect score!"
   const str2 = "How about another try?"
   
   // guard against direct access
@@ -25,7 +25,7 @@ export function GameFinish() {
       <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white px-4 font-mono"> {/* Page container */}
         <h2 className="text-2xl mb-3">Game Over</h2>
        
-        {score >= 80 ? ( // offer feedback based on score
+        {score === 50 ? ( // offer feedback based on score
           <p>{str}</p>) : (
           <p>{str2}</p>
           )}
