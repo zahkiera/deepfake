@@ -229,7 +229,7 @@ export function GameScreen() {
               key={item.id}
               onClick={() => handleAnswer(item)}
               disabled={isAnswered}
-              className={`border-4 rounded-lg overflow-hidden ${borderColor} hover:bg-slate-800 transition-colors flex items-center justify-center`}
+              className={`border-4 rounded-lg overflow-hidden ${borderColor} bg-slate-800 hover:bg-slate-700 transition-colors flex items-center justify-center`}
             >
               {item.url ? (
                 item.isVideo ? (
