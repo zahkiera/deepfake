@@ -45,12 +45,12 @@ git clone https://github.com/ZainaK05/Secure-Software-Final-Project.git
 ```bash
 python -m venv venv # (or py -m venv venv)
 source venv/bin/activate  # On Windows use: .\venv\Scripts\activate (make sure you're in the parent directory of your venv folder when trying to activate it)
+cd Secure-Software-Final-Project
 pip install -r requirements.txt
 ```
 
 #### Run FastAPI Server
 ```bash
-cd Secure-Software-Final-Project
 cd backend
 uvicorn main:app --reload --host 127.0.0.1 --port 8000
 ```
